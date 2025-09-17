@@ -1,6 +1,20 @@
 # How to Contribute
 
-We would love to accept your patches and contributions to this project.
+We would love to accept your patches and contributions to this enhanced LM Studio fork.
+
+## 🏠 Fork-Specific Contributions
+
+This is an enhanced fork of [QwenLM/qwen-code](https://github.com/QwenLM/qwen-code) with optimized LM Studio integration. In addition to general contributions, we especially welcome:
+
+- **LM Studio Integration Improvements** - Better model configurations, connection handling, or performance optimizations
+- **Loop Detection Fixes** - Solutions for infinite loop issues with different models
+- **Model Compatibility** - Testing and optimization for new local models
+- **Documentation Enhancements** - Improved setup guides, troubleshooting, or hardware recommendations
+- **Performance Optimizations** - Better resource usage or response times for local models
+
+## 🤝 Attribution to Original Project
+
+This fork maintains full compliance with the original project's Apache 2.0 license and contribution guidelines. All contributors must also follow the original project's requirements below.
 
 ## Before you begin
 
@@ -47,6 +61,25 @@ If an issue for your change doesn't exist, please **open one first** and wait fo
 #### 2. Keep It Small and Focused
 
 We favor small, atomic PRs that address a single issue or add a single, self-contained feature.
+
+#### 3. LM Studio Testing Guidelines (Fork-Specific)
+
+For contributions related to LM Studio integration:
+
+- **Test with `openai/gpt-oss-20b`** - Verify the optimized model still works correctly
+- **Document Hardware Requirements** - Include VRAM usage and performance notes
+- **Test Loop Detection** - Ensure changes don't reintroduce infinite loop issues
+- **Verify Tool Calling** - Confirm all tool use functionality works as expected
+- **Network Testing** - Test with both local and network-attached LM Studio instances
+
+#### 4. Environment Configuration Testing
+
+When modifying `.env` handling or configuration:
+
+- Test with both environment variables and `.env` files
+- Verify precedence order (env vars override .env files)
+- Test configuration validation and error messages
+- Document new configuration options clearly
 
 - **Do:** Create a PR that fixes one specific bug or adds one specific feature.
 - **Don't:** Bundle multiple unrelated changes (e.g., a bug fix, a new feature, and a refactor) into a single PR.

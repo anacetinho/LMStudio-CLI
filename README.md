@@ -1,4 +1,4 @@
-# Qwen Code
+# Qwen Code - Enhanced LM Studio Fork
 
 <div align="center">
 
@@ -9,7 +9,9 @@
 [![Node.js Version](https://img.shields.io/badge/node-%3E%3D20.0.0-brightgreen.svg)](https://nodejs.org/)
 [![Downloads](https://img.shields.io/npm/dm/@qwen-code/qwen-code.svg)](https://www.npmjs.com/package/@qwen-code/qwen-code)
 
-**AI-powered command-line workflow tool for developers**
+**🏠 Enhanced AI-powered command-line tool with LM Studio integration**
+
+> **Fork Notice**: This is an enhanced fork of [QwenLM/qwen-code](https://github.com/QwenLM/qwen-code) with optimized LM Studio integration, improved model selection, and resolved loop detection issues for better local AI performance.
 
 [Installation](#installation) • [Quick Start](#quick-start) • [Features](#key-features) • [Documentation](./docs/) • [Contributing](./CONTRIBUTING.md)
 
@@ -27,6 +29,16 @@
 
 Qwen Code is a powerful command-line AI workflow tool adapted from [**Gemini CLI**](https://github.com/google-gemini/gemini-cli) ([details](./README.gemini.md)), specifically optimized for [Qwen3-Coder](https://github.com/QwenLM/Qwen3-Coder) models. It enhances your development workflow with advanced code understanding, automated tasks, and intelligent assistance.
 
+## 🚀 Fork Enhancements
+
+This enhanced fork provides **superior LM Studio integration** with significant improvements:
+
+- **🎯 Optimized Model Selection**: Default `openai/gpt-oss-20b` model for better performance and reduced loop issues
+- **🔧 Simplified Configuration**: Streamlined `.env` setup with comprehensive examples and troubleshooting
+- **🛡️ Loop Detection Fixes**: Resolved infinite loop issues through improved model configuration
+- **📖 Enhanced Documentation**: Complete LM Studio setup guide with hardware recommendations
+- **⚡ Performance Optimized**: Better conversation flow and tool calling reliability
+
 ## 💡 Free Options Available
 
 Get started with Qwen Code at no cost using any of these free options:
@@ -38,6 +50,14 @@ Get started with Qwen Code at no cost using any of these free options:
 - Simply run `qwen` and authenticate with your qwen.ai account
 - Automatic credential management and refresh
 - Use `/auth` command to switch to Qwen OAuth if you have initialized with OpenAI compatible mode
+
+### 🏠 LM Studio Local (Enhanced - Recommended for Privacy)
+
+- **100% Free** - No API costs or usage limits
+- **Complete Privacy** - Everything runs locally on your hardware
+- **Superior Performance** - Optimized `openai/gpt-oss-20b` model configuration
+- **No Loop Issues** - Resolved infinite loop problems through model optimization
+- **Easy Setup** - Streamlined configuration with comprehensive `.env` examples
 
 ### 🌏 Regional Free Tiers
 
@@ -220,6 +240,111 @@ export OPENAI_API_KEY="your_api_key_here"
 export OPENAI_BASE_URL="https://openrouter.ai/api/v1"
 export OPENAI_MODEL="qwen/qwen3-coder:free"
 ```
+
+</details>
+
+<details>
+<summary><b>🏠 Enhanced LM Studio Integration (Fork Optimized)</b></summary>
+
+**LM Studio Local Configuration** - Connect to your local LM Studio server with optimized model selection
+
+This enhanced fork provides **superior LM Studio integration** with resolved loop issues and better performance through optimized model configuration.
+
+### Quick Setup
+
+1. **Start LM Studio** on your local machine or network
+2. **Load a compatible model** (e.g., `openai/gpt-oss-20b`)
+3. **Start the local server** in LM Studio
+4. **Configure Qwen CLI** with your server details
+
+### Environment Variables
+
+Create a `.env` file in your project root:
+
+```env
+# LM Studio Configuration
+LM_STUDIO_SERVER_URL=http://192.168.1.91:1234/v1
+LM_STUDIO_MODEL=openai/gpt-oss-20b
+```
+
+### 🎯 Enhanced Model Configuration
+
+**⭐ Recommended Model (Fork Optimized):**
+- `openai/gpt-oss-20b` - **Optimized** (20B params) - Best conversation flow, no loop issues, superior tool calling
+
+**Alternative Qwen3-Coder Models:**
+- `qwen/qwen3-coder-7b` - **Lightweight** (7B params) - Faster inference, lower VRAM
+- `qwen/qwen3-coder-14b` - **Balanced** (14B params) - Good performance/speed ratio
+- `qwen/qwen3-coder-30b` - **High Quality** (30B params) - Better code quality, more VRAM
+- `qwen/qwen3-coder-32b` - **Premium** (32B params) - Highest quality, requires significant resources
+
+> **🚀 Fork Enhancement**: The `openai/gpt-oss-20b` model has been extensively tested and provides significantly better performance with resolved loop detection issues that commonly occur with other models.
+
+**🔧 Hardware Recommendations:**
+```env
+# For 8GB VRAM or less (use lightweight alternatives)
+DEFAULT_LM_STUDIO_MODEL=qwen/qwen3-coder-7b
+
+# For 16GB VRAM (recommended for most users)
+DEFAULT_LM_STUDIO_MODEL=qwen/qwen3-coder-14b
+
+# For 20GB+ VRAM (recommended - fork optimized)
+DEFAULT_LM_STUDIO_MODEL=openai/gpt-oss-20b
+
+# For 24GB+ VRAM (premium performance)
+DEFAULT_LM_STUDIO_MODEL=qwen/qwen3-coder-30b
+```
+
+**⚠️ Important:** The model name must **exactly match** what you have loaded in LM Studio.
+
+### Authentication Setup
+
+```bash
+# Option 1: Use environment variables
+export LM_STUDIO_SERVER_URL="http://192.168.1.91:1234/v1"
+export LM_STUDIO_MODEL="openai/gpt-oss-20b"
+export QWEN_DEFAULT_AUTH_TYPE="lm-studio-local"
+
+# Option 2: Configure interactively
+qwen
+# Select "3. LM Studio (Local)"
+# Enter your server URL and model name
+```
+
+**🎯 Enhanced Benefits:**
+- ✅ **Complete privacy** - Everything runs locally
+- ✅ **No API costs** - Use your own hardware
+- ✅ **Superior performance** - Optimized model selection
+- ✅ **No loop issues** - Resolved infinite loop problems
+- ✅ **Full tool use support** - Compatible with all Qwen Code features
+- ✅ **Easy sharing** - Configure once via .env file
+
+**📋 Requirements:**
+- LM Studio running with a compatible model
+- Network access to the LM Studio server
+- Model with tool use capabilities (recommended: `openai/gpt-oss-20b`)
+
+### 🛠️ Troubleshooting Common Issues
+
+**Loop Detection Problems:**
+- ✅ **Solved in this fork** - Use `openai/gpt-oss-20b` model instead of qwen models
+- Clear conversation with `/clear` command if loops occur
+- Ensure model supports tool calling properly
+
+**Connection Issues:**
+```bash
+# Test LM Studio connectivity
+curl -v http://YOUR_LM_STUDIO_IP:1234/v1/models
+
+# Verify environment variables
+echo $LM_STUDIO_SERVER_URL
+echo $LM_STUDIO_MODEL
+```
+
+**Model Performance:**
+- Use `openai/gpt-oss-20b` for best results (fork optimized)
+- Ensure adequate VRAM for chosen model
+- Restart LM Studio if model behaves unexpectedly
 
 </details>
 

@@ -13,3 +13,10 @@ export const DEFAULT_GEMINI_FLASH_MODEL = 'gemini-2.5-flash';
 export const DEFAULT_GEMINI_FLASH_LITE_MODEL = 'gemini-2.5-flash-lite';
 
 export const DEFAULT_GEMINI_EMBEDDING_MODEL = 'gemini-embedding-001';
+
+// LM Studio model constants optimized for Qwen3-Coder with tool use
+// These can be configured via environment variables in .env file
+export const DEFAULT_LM_STUDIO_MODEL =
+  process.env['DEFAULT_LM_STUDIO_MODEL'] || 'qwen/qwen3-coder-30b';
+export const DEFAULT_LM_STUDIO_SERVER_URL =
+  process.env['DEFAULT_LM_STUDIO_SERVER_URL'] || 'http://localhost:1234/v1';

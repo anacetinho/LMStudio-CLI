@@ -12,12 +12,16 @@ import {
   setOpenAIApiKey,
   setOpenAIBaseUrl,
   setOpenAIModel,
+  setLMStudioServerUrl,
+  setLMStudioModel,
+  setLMStudioApiKey,
   validateAuthMethod,
 } from '../../config/auth.js';
 import { type LoadedSettings, SettingScope } from '../../config/settings.js';
 import { Colors } from '../colors.js';
 import { useKeypress } from '../hooks/useKeypress.js';
 import { OpenAIKeyPrompt } from './OpenAIKeyPrompt.js';
+import { LMStudioPrompt } from './LMStudioPrompt.js';
 import { RadioButtonSelect } from './shared/RadioButtonSelect.js';
 
 interface AuthDialogProps {
@@ -47,9 +51,11 @@ export function AuthDialog({
     initialErrorMessage || null,
   );
   const [showOpenAIKeyPrompt, setShowOpenAIKeyPrompt] = useState(false);
+  const [showLMStudioPrompt, setShowLMStudioPrompt] = useState(false);
   const items = [
     { label: 'Qwen OAuth', value: AuthType.QWEN_OAUTH },
     { label: 'OpenAI', value: AuthType.USE_OPENAI },
+    { label: 'LM Studio (Local)', value: AuthType.LM_STUDIO_LOCAL },
   ];
 
   const initialAuthIndex = Math.max(
@@ -83,6 +89,9 @@ export function AuthDialog({
       ) {
         setShowOpenAIKeyPrompt(true);
         setErrorMessage(null);
+      } else if (authMethod === AuthType.LM_STUDIO_LOCAL) {
+        setShowLMStudioPrompt(true);
+        setErrorMessage(null);
       } else {
         setErrorMessage(error);
       }
@@ -109,9 +118,28 @@ export function AuthDialog({
     setErrorMessage('OpenAI API key is required to use OpenAI authentication.');
   };
 
+  const handleLMStudioSubmit = (
+    serverUrl: string,
+    model: string,
+    apiKey?: string,
+  ) => {
+    setLMStudioServerUrl(serverUrl);
+    setLMStudioModel(model);
+    if (apiKey) {
+      setLMStudioApiKey(apiKey);
+    }
+    setShowLMStudioPrompt(false);
+    onSelect(AuthType.LM_STUDIO_LOCAL, SettingScope.User);
+  };
+
+  const handleLMStudioCancel = () => {
+    setShowLMStudioPrompt(false);
+    setErrorMessage('LM Studio configuration is required to use local LM Studio.');
+  };
+
   useKeypress(
     (key) => {
-      if (showOpenAIKeyPrompt) {
+      if (showOpenAIKeyPrompt || showLMStudioPrompt) {
         return;
       }
 
@@ -139,6 +167,15 @@ export function AuthDialog({
       <OpenAIKeyPrompt
         onSubmit={handleOpenAIKeySubmit}
         onCancel={handleOpenAIKeyCancel}
+      />
+    );
+  }
+
+  if (showLMStudioPrompt) {
+    return (
+      <LMStudioPrompt
+        onSubmit={handleLMStudioSubmit}
+        onCancel={handleLMStudioCancel}
       />
     );
   }

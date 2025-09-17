@@ -1,0 +1,23 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(npm run build:*)",
+      "Bash(cat:*)",
+      "Bash(curl:*)",
+      "Bash(ping:*)",
+      "Bash(nc:*)",
+      "Bash(echo:*)",
+      "Bash(for i in {1..5})",
+      "Bash(do echo \"Test $i:\")",
+      "Bash(done)",
+      "Bash(for i in 1 2 3 4 5)",
+      "Bash(LM_STUDIO_SERVER_URL=http://192.168.1.91:1234/v1 LM_STUDIO_MODEL=qwen/qwen3-coder-30b node -e \"console.log(''LM_STUDIO_SERVER_URL:'', process.env[''LM_STUDIO_SERVER_URL'']); console.log(''LM_STUDIO_MODEL:'', process.env[''LM_STUDIO_MODEL'']); console.log(''DEFAULT_LM_STUDIO_SERVER_URL:'', process.env[''DEFAULT_LM_STUDIO_SERVER_URL'']); console.log(''DEFAULT_LM_STUDIO_MODEL:'', process.env[''DEFAULT_LM_STUDIO_MODEL'']);\")",
+      "Bash(LM_STUDIO_SERVER_URL=http://192.168.1.91:1234/v1 LM_STUDIO_MODEL=qwen/qwen3-coder-30b DEBUG=* timeout 10s qwen --version)",
+      "Read(//home/migue/**)",
+      "Bash(unset:*)",
+      "Bash(node:*)"
+    ],
+    "deny": [],
+    "ask": []
+  }
+}

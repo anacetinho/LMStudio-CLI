@@ -52,6 +52,38 @@ export const validateAuthMethod = (authMethod: string): string | null => {
     return null;
   }
 
+  if (authMethod === AuthType.LM_STUDIO_LOCAL) {
+    // Check for either LM_STUDIO_SERVER_URL or DEFAULT_LM_STUDIO_SERVER_URL
+    const lmStudioServerUrl = process.env['LM_STUDIO_SERVER_URL'] || process.env['DEFAULT_LM_STUDIO_SERVER_URL'];
+
+    // If no server URL is configured, allow interactive configuration
+    // The LMStudioPrompt component will handle user input
+    if (!lmStudioServerUrl) {
+      return null; // Allow interactive configuration
+    }
+
+    // Basic URL validation if environment variable is provided
+    try {
+      const url = new URL(lmStudioServerUrl);
+      // Ensure the path includes /v1 for proper OpenAI-compatible API access
+      if (!url.pathname.includes('/v1')) {
+        return 'LM Studio server URL must include /v1 path. Example: http://localhost:1234/v1';
+      }
+    } catch {
+      return 'Invalid LM Studio server URL format. Please provide a valid URL like http://localhost:1234/v1';
+    }
+
+    // Check if model name is specified (check both variable names)
+    const lmStudioModel = process.env['LM_STUDIO_MODEL'] || process.env['DEFAULT_LM_STUDIO_MODEL'];
+    if (!lmStudioModel) {
+      return null; // Allow interactive configuration
+    }
+
+    // Connectivity and model availability will be tested during content generation
+    // If the server is not reachable or model doesn't exist, the user will get a clear error message
+    return null;
+  }
+
   return 'Invalid auth method selected.';
 };
 
@@ -65,4 +97,29 @@ export const setOpenAIBaseUrl = (baseUrl: string): void => {
 
 export const setOpenAIModel = (model: string): void => {
   process.env['OPENAI_MODEL'] = model;
+};
+
+export const setLMStudioServerUrl = (serverUrl: string): void => {
+  process.env['LM_STUDIO_SERVER_URL'] = serverUrl;
+  // Also set OPENAI_BASE_URL since LM Studio uses OpenAI-compatible endpoints
+  process.env['OPENAI_BASE_URL'] = serverUrl;
+};
+
+export const setLMStudioModel = (model: string): void => {
+  process.env['LM_STUDIO_MODEL'] = model;
+  // Also set OPENAI_MODEL since LM Studio uses OpenAI-compatible API
+  process.env['OPENAI_MODEL'] = model;
+};
+
+export const setLMStudioApiKey = (apiKey: string): void => {
+  if (apiKey && apiKey.trim()) {
+    process.env['LM_STUDIO_API_KEY'] = apiKey;
+    // Also set OPENAI_API_KEY since LM Studio uses OpenAI-compatible API
+    process.env['OPENAI_API_KEY'] = apiKey;
+  } else {
+    // For local LM Studio instances, clear any existing API key
+    // This ensures we use the default placeholder 'sk-no-key-required'
+    delete process.env['LM_STUDIO_API_KEY'];
+    delete process.env['OPENAI_API_KEY'];
+  }
 };

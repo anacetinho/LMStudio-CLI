@@ -15,7 +15,7 @@ import type {
 import { GoogleGenAI } from '@google/genai';
 import { createCodeAssistContentGenerator } from '../code_assist/codeAssist.js';
 import type { Config } from '../config/config.js';
-import { DEFAULT_GEMINI_MODEL, DEFAULT_QWEN_MODEL } from '../config/models.js';
+import { DEFAULT_GEMINI_MODEL, DEFAULT_QWEN_MODEL, DEFAULT_LM_STUDIO_MODEL, DEFAULT_LM_STUDIO_SERVER_URL } from '../config/models.js';
 
 import type { UserTierId } from '../code_assist/types.js';
 import { InstallationManager } from '../utils/installationManager.js';
@@ -49,6 +49,7 @@ export enum AuthType {
   CLOUD_SHELL = 'cloud-shell',
   USE_OPENAI = 'openai',
   QWEN_OAUTH = 'qwen-oauth',
+  LM_STUDIO_LOCAL = 'lm-studio-local',
 }
 
 export type ContentGeneratorConfig = {
@@ -90,6 +91,11 @@ export function createContentGeneratorConfig(
   const openaiApiKey = process.env['OPENAI_API_KEY'] || undefined;
   const openaiBaseUrl = process.env['OPENAI_BASE_URL'] || undefined;
   const openaiModel = process.env['OPENAI_MODEL'] || undefined;
+
+  // lm studio auth - check both variable naming conventions
+  const lmStudioServerUrl = process.env['LM_STUDIO_SERVER_URL'] || process.env['DEFAULT_LM_STUDIO_SERVER_URL'] || undefined;
+  const lmStudioModel = process.env['LM_STUDIO_MODEL'] || process.env['DEFAULT_LM_STUDIO_MODEL'] || undefined;
+  const lmStudioApiKey = process.env['LM_STUDIO_API_KEY'] || undefined;
 
   // Use runtime model from config if available; otherwise, fall back to parameter or default
   const effectiveModel = config.getModel() || DEFAULT_GEMINI_MODEL;
@@ -146,6 +152,16 @@ export function createContentGeneratorConfig(
     // Prefer to use qwen3-coder-plus as the default Qwen model if QWEN_MODEL is not set.
     contentGeneratorConfig.model =
       process.env['QWEN_MODEL'] || DEFAULT_QWEN_MODEL;
+
+    return contentGeneratorConfig;
+  }
+
+  if (authType === AuthType.LM_STUDIO_LOCAL) {
+    // For local LM Studio instances, API key is typically not required
+    // Use a standard placeholder for unauthenticated local servers if no key provided
+    contentGeneratorConfig.apiKey = lmStudioApiKey || 'sk-no-key-required';
+    contentGeneratorConfig.baseUrl = lmStudioServerUrl || DEFAULT_LM_STUDIO_SERVER_URL;
+    contentGeneratorConfig.model = lmStudioModel || DEFAULT_LM_STUDIO_MODEL; // Default to Qwen3-Coder-30B
 
     return contentGeneratorConfig;
   }
@@ -237,6 +253,21 @@ export async function createContentGenerator(
         `Failed to initialize Qwen: ${error instanceof Error ? error.message : String(error)}`,
       );
     }
+  }
+
+  if (config.authType === AuthType.LM_STUDIO_LOCAL) {
+    if (!config.baseUrl) {
+      throw new Error('LM Studio server URL is required');
+    }
+
+    // Import OpenAIContentGenerator dynamically to reuse for LM Studio
+    const { createOpenAIContentGenerator } = await import(
+      './openaiContentGenerator/index.js'
+    );
+
+    // Use OpenAI content generator with LM Studio configuration
+    // LM Studio provides OpenAI-compatible API endpoints
+    return createOpenAIContentGenerator(config, gcConfig);
   }
 
   throw new Error(
